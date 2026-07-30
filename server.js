@@ -13,7 +13,13 @@ connectDB().catch((err) => {
 
 const app = express();
 
-app.use(cors());
+// ✅ CORS options configure kar diye gaye hain
+app.use(cors({
+  origin: 'https://dlbmanagementllc.kesug.com', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
