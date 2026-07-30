@@ -1,17 +1,14 @@
 const express = require('express');
+const router = express.Router(); // ✅ Router properly define kiya
 const nodemailer = require('nodemailer');
 const multer = require('multer');
-
-const app = express();
-app.use(cors());
-app.use(express.json());
 
 // Files ko memory me handle karne ke liye Multer setup
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Form Submission & Email Sending Route
-app.post(
-  '/api/carrier-signup',
+router.post(
+  '/signup', // ✅ Yahan /signup rakha hai taaki /api/carrier/signup ban jaye
   upload.fields([
     { name: 'mcAuthorityDoc', maxCount: 1 },
     { name: 'coiDoc', maxCount: 1 },
@@ -26,8 +23,8 @@ app.post(
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-        user: 'dlbmanagement24@gmail.com',          // Example: 'expresslogistics@gmail.com'
-        pass: 'nhvc rbyj yzbs sfjo'
+          user: 'dlbmanagement24@gmail.com',
+          pass: 'nhvc rbyj yzbs sfjo',
         },
       });
 
@@ -45,8 +42,8 @@ app.post(
 
       // 3. Email Layout & Details
       const mailOptions = {
-        from: `"${companyName}" <${process.env.EMAIL_USER}>`,
-        to: process.env.RECEIVER_EMAIL, // Jis email par application receive karni hai
+        from: `"${companyName}" <dlbmanagement24@gmail.com>`,
+        to: process.env.RECEIVER_EMAIL || 'dlbmanagement24@gmail.com',
         replyTo: contactEmail,
         subject: `🚚 New Carrier Signup: ${companyName} (${mcNumber})`,
         html: `
@@ -77,7 +74,5 @@ app.post(
   }
 );
 
-app.listen(5000, () => {
-  console.log('Server running on port 5000');
-});
+// ✅ Ab yeh router sahi export hoga
 module.exports = router;
