@@ -8,15 +8,15 @@ const carrierRoutes = require('./routes/carrierRoutes');
 // Load environment variables
 dotenv.config();
 
-// Connect to MongoDB Database (with error handling)
+// Connect to MongoDB Database safely
 connectDB().catch((err) => {
-  console.error('MongoDB Connection Error:', err.message);
+  console.error('❌ MongoDB Initial Connection Error:', err.message);
 });
 
 const app = express();
 
 // Middlewares
-app.use(cors()); // Allow requests from frontend domain
+app.use(cors()); // Allow requests from frontend
 app.use(express.json()); // Parse incoming JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 
@@ -28,7 +28,7 @@ app.use('/api/carrier', carrierRoutes);
 
 // Base Health Check Route
 app.get('/', (req, res) => {
-  res.send('Dispatch Services & Freight Carrier API is Running...');
+  res.status(200).send('Dispatch Services & Freight Carrier API is Running...');
 });
 
 // Global Error Handler Middleware
@@ -40,13 +40,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start Server (Only for local development)
+// Start Server locally if not running on Vercel
 const PORT = process.env.PORT || 5000;
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`🚀 Dispatch Backend Server running on port ${PORT}`);
   });
 }
 
-// ⚠️ VERCEL KE LIYE MUST HAI: Express app export karein
+// Vercel Serverless Function Export
 module.exports = app;
