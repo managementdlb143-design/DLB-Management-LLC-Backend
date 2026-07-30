@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const connectDB = require('./config/db');
+const carrierRoutes = require('./routes/carrierRoutes'); // ✅ Carrier routes wapas import kar liye
 
 dotenv.config();
 
@@ -18,10 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// 🛑 Temporary carrierRoutes hata kar check kar rahe hain taaki server live ho jaye
-app.get('/api/carrier', (req, res) => {
-  res.json({ message: "Carrier API temporary route working" });
-});
+// ✅ Original carrier routes integration
+app.use('/api/carrier', carrierRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).send('Dispatch Services & Freight Carrier API is Running...');
